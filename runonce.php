@@ -32,6 +32,10 @@
 	{
 		echo "<br />USERS table already present!<br />";
 	}
+	
+	/* Create admin always */
+	$statement = oci_parse($connection, "insert into users values ('admin@mmt.com', '21232f297a57a5a743894a0e4a801fc3', 'admin', 0, 0, 0)");
+	oci_execute($statement);
 
 	//CATEGORY
 	$statement = oci_parse($connection, 'select 1 from category');
@@ -52,6 +56,16 @@
 	{
 		echo "<br />CATEGORY table already present!<br />";
 	}
+	
+	/* Create default categories */
+	$statement = oci_parse($connection, "insert into category values (0,'Dummy')");
+	oci_execute($statement);
+	$statement = oci_parse($connection, "insert into category values (1, 'Groceries')");
+	oci_execute($statement);
+	$statement = oci_parse($connection, "insert into category values (2, 'Restaurant')");
+	oci_execute($statement);
+	$statement = oci_parse($connection, "insert into category values (3, 'Clothing')");  	
+	oci_execute($statement);
 
 	//TRANSACTION
 	$statement = oci_parse($connection, 'select 1 from transaction');
@@ -88,7 +102,7 @@
 							group_owner varchar(32),
 							group_name varchar(64),
 							constraint group_pk primary key (group_id),
-							constraint group_fk foreign key (group_name) references users(email_add))');
+							constraint group_fk foreign key (group_owner) references users(email_add))');
 		if (!oci_execute($statement))
 		{
 			die("USERGROUP table creation failed!");
